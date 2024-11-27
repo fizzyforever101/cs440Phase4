@@ -122,12 +122,22 @@ def open_procedure_form(proc_name, fields):
             delivery_service_ids = get_delivery_service_ids()  # Fetch usernames from the database
             entry.addItems(delivery_service_ids)
             layout.addRow(f"{field}:", entry)
+        elif field == "driver_username":  # Use a QComboBox for username
+            entry = QComboBox()
+            delivery_service_ids = get_driver_usernames()  # Fetch usernames from the database
+            entry.addItems(delivery_service_ids)
+            layout.addRow(f"{field}:", entry)
         elif field == "employee_id":  # Use a QComboBox for username
             entry = QComboBox()
             delivery_service_ids = get_employee_ids()  # Fetch usernames from the database
             entry.addItems(delivery_service_ids)
             layout.addRow(f"{field}:", entry)
-        elif field == "van_barcode":  # Use a QComboBox for username
+        elif field == "owner":  # Use a QComboBox for username
+            entry = QComboBox()
+            delivery_service_ids = get_owners()  # Fetch usernames from the database
+            entry.addItems(delivery_service_ids)
+            layout.addRow(f"{field}:", entry)
+        elif field == "product_barcode":  # Use a QComboBox for username
             entry = QComboBox()
             delivery_service_ids = get_barcodes()  # Fetch usernames from the database
             entry.addItems(delivery_service_ids)
@@ -201,6 +211,11 @@ def open_procedure_form(proc_name, fields):
             entry.setRange(0, 100000)  # Assuming experience ranges from 0 to 100
             entry.setValue(0)  # Set the initial value to 0
             layout.addRow(f"{field}:", entry)
+        elif field == "amount":  # Use a QSpinBox for employee_experience
+            entry = QSpinBox()
+            entry.setRange(0, 100000)  # Assuming experience ranges from 0 to 100
+            entry.setValue(0)  # Set the initial value to 0
+            layout.addRow(f"{field}:", entry)
         else:  # Use a QLineEdit for other fields
             entry = QtWidgets.QLineEdit()
             layout.addRow(f"{field}:", entry)
@@ -245,6 +260,21 @@ def get_van_tags():
     finally:
         conn.close()
 
+def get_owners():
+    conn = connect_to_db()
+    if conn is None:
+        return []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT username tag FROM business_owners")  # Query to get locations
+        locations = [str(row[0]) for row in cursor.fetchall()]
+        return locations
+    except mysql.connector.Error as e:
+        QMessageBox.critical(None, "Database Error", f"Error fetching locations from database:\n{e}")
+        return []
+    finally:
+        conn.close()
+
 def get_delivery_service_ids():
     conn = connect_to_db()
     if conn is None:
@@ -252,6 +282,21 @@ def get_delivery_service_ids():
     try:
         cursor = conn.cursor()
         cursor.execute("SELECT id FROM delivery_services")  # Query to get locations
+        locations = [row[0] for row in cursor.fetchall()]
+        return locations
+    except mysql.connector.Error as e:
+        QMessageBox.critical(None, "Database Error", f"Error fetching locations from database:\n{e}")
+        return []
+    finally:
+        conn.close()
+
+def get_driver_usernames():
+    conn = connect_to_db()
+    if conn is None:
+        return []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT username FROM drivers")  # Query to get locations
         locations = [row[0] for row in cursor.fetchall()]
         return locations
     except mysql.connector.Error as e:
@@ -388,10 +433,14 @@ class MyApp(QtWidgets.QWidget):
             "drive_van": ["id", "tag", "destination"],
             "fire_employee": ["employee_username", "employee_id"],
             "hire_employee": ["username", "new_employee_id"],
-            "load_van": ["van_id", "tag", "van_barcode"],
+            "load_van": ["van_id", "tag", "product_barcode"],
             "manage_service": ["employee_username", "employee_id"],
-            "purchase_product": ["business_long_name", "van_id", "van_tag", "van_barcode", "quantity"],
-            "refuel_van": ["van_id", "van_tag", "more_fuel"]
+            "purchase_product": ["business_long_name", "van_id", "van_tag", "product_barcode", "quantity"],
+            "refuel_van": ["van_id", "van_tag", "more_fuel"],
+            "remove_driver_role": ["driver_username"],
+            "remove_product": ["product_barcode"],
+            "remove_van": ["van_id", "van_tag"],
+            "start_funding": ["owner", "amount", "business_long_name", "fund_date"]
             # Add other procedures here if needed
         }
 
