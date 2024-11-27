@@ -40,7 +40,7 @@ cd <project_directory>
 It’s recommended to use a virtual environment to avoid conflicts with system-wide packages:
 
 ```bash
-python -m venv venv
+python3 -m venv venv
 ```
 
 Activate the virtual environment:
