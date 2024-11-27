@@ -1,7 +1,7 @@
 import sys
 from PyQt5 import QtWidgets, QtCore
 import mysql.connector
-from PyQt5.QtWidgets import QMessageBox, QComboBox, QSpinBox
+from PyQt5.QtWidgets import QMessageBox, QComboBox, QSpinBox, QScrollArea, QTableWidget, QTableWidgetItem, QVBoxLayout, QDialog
 
 # Database connection setup
 def connect_to_db():
@@ -36,6 +36,72 @@ def execute_procedure(proc_name, params):
         QMessageBox.critical(None, "Execution Error", f"Error executing procedure:\n{e}")
     finally:
         conn.close()
+
+def execute_view(view_name):
+    conn = connect_to_db()
+    if conn is None:
+        return
+    
+    try:
+        cursor = conn.cursor()
+        # Execute the query to fetch all data from the view
+        cursor.execute(f"SELECT * FROM {view_name}")
+        
+        # Fetch column names (from cursor.description)
+        column_names = [desc[0] for desc in cursor.description]
+        
+        # Fetch results
+        results = cursor.fetchall()
+        
+        # Check if results are returned
+        if results:
+            # Handle the results: Show them in a table pop-up
+            show_table_popup(results, column_names)
+            QMessageBox.information(None, "Success", f"View {view_name} executed successfully!")
+        else:
+            QMessageBox.information(None, "No Results", "No rows found in the view.")
+    except mysql.connector.Error as e:
+        QMessageBox.critical(None, "Execution Error", f"Error executing view:\n{e}")
+    finally:
+        conn.close()
+
+def show_table_popup(data, column_names):
+    # Create a pop-up window to display the data in a table
+    table_popup = TablePopUp(data, column_names)
+    table_popup.exec_()
+
+class TablePopUp(QDialog):
+    def __init__(self, data, column_names):
+        super().__init__()
+        self.setWindowTitle("Data Table")
+
+        # Set up the layout
+        layout = QVBoxLayout()
+
+        # Create a QTableWidget to display the data
+        self.table_widget = QTableWidget()
+        layout.addWidget(self.table_widget)
+
+        # Populate the table with data
+        self.populate_table(data, column_names)
+
+        # Set the layout for the dialog
+        self.setLayout(layout)
+
+    def populate_table(self, data, column_names):
+        # Set the row count based on the number of rows in the data
+        self.table_widget.setRowCount(len(data))
+        
+        # Set the column count (based on the number of columns in the data)
+        self.table_widget.setColumnCount(len(column_names))
+
+        # Set the column headers (column names)
+        self.table_widget.setHorizontalHeaderLabels(column_names)
+
+        # Populate the table with data
+        for row in range(len(data)):
+            for col in range(len(data[row])):
+                self.table_widget.setItem(row, col, QTableWidgetItem(str(data[row][col])))
 
 # Handle dynamic form submission
 def submit_form(proc_name, entries):
@@ -416,7 +482,7 @@ def get_employee_ids():
 class MyApp(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("MySQL Procedure Executor")
+        self.setWindowTitle("MySQL Procedure/View Executor")
         self.setGeometry(100, 100, 400, 300)
 
         # Define stored procedures and their input fields
@@ -440,25 +506,43 @@ class MyApp(QtWidgets.QWidget):
             "remove_driver_role": ["driver_username"],
             "remove_product": ["product_barcode"],
             "remove_van": ["van_id", "van_tag"],
-            "start_funding": ["owner", "amount", "business_long_name", "fund_date"]
+            "start_funding": ["owner", "amount", "business_long_name", "fund_date"],
+            "takeover_van": ["manager", "van_id", "van_tag"]
             # Add other procedures here if needed
         }
 
+        self.views = ["display_driver_view", "display_employee_view", "display_location_view", "display_owner_view", "display_product_view", "display_service_view"]
+
         # Create layout
-        layout = QtWidgets.QVBoxLayout()
+        self.layout = QtWidgets.QVBoxLayout()
+        self.scroll_area = QtWidgets.QScrollArea(self)
+        self.scroll_area.setWidgetResizable(True)
+
+        self.content_widget = QtWidgets.QWidget()
+        self.content_layout = QtWidgets.QVBoxLayout(self.content_widget) 
 
         # Title
-        title_label = QtWidgets.QLabel("Available Procedures")
+        title_label = QtWidgets.QLabel("Available Procedures & Views")
         title_label.setAlignment(QtCore.Qt.AlignCenter)
-        layout.addWidget(title_label)
+        self.layout.addWidget(title_label)
 
         # Create buttons for each stored procedure
         for proc_name, fields in self.stored_procedures.items():
             button = QtWidgets.QPushButton(proc_name)
             button.clicked.connect(lambda _, proc_name=proc_name, fields=fields: open_procedure_form(proc_name, fields))
-            layout.addWidget(button)
+            self.content_layout.addWidget(button)
 
-        self.setLayout(layout)
+        for view_name in self.views:
+            button = QtWidgets.QPushButton(view_name)
+            button.clicked.connect(lambda _, view_name=view_name: execute_view(view_name))
+            self.content_layout.addWidget(button)
+
+        self.scroll_area.setWidget(self.content_widget)
+
+        # Add the scroll area to the main layout
+        self.layout.addWidget(self.scroll_area)
+
+        self.setLayout(self.layout)
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
