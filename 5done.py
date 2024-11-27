@@ -77,6 +77,11 @@ def open_procedure_form(proc_name, fields):
             locations = get_locations()  # Fetch locations from the database
             entry.addItems(locations)
             layout.addRow(f"{field}:", entry)
+        elif field == "destination":  # Use a QComboBox for location (assuming locations are predefined)
+            entry = QComboBox()
+            locations = get_locations()  # Fetch locations from the database
+            entry.addItems(locations)
+            layout.addRow(f"{field}:", entry)
         elif field == "manager":  # Use a QComboBox for location (assuming locations are predefined)
             entry = QComboBox()
             employees = get_employees()  # Fetch locations from the database
@@ -265,7 +270,8 @@ class MyApp(QtWidgets.QWidget):
             "add_product": ["barcode", "name", "weight"],
             "add_service": ["id", "long_name", "home_base", "manager"],
             "add_van": ["van_id", "tag", "fuel", "capacity", "sales", "driven_by"],
-            "add_worker_role": ["username"]
+            "add_worker_role": ["username"],
+            "drive_van": ["id", "tag", "destination"]
             # Add other procedures here if needed
         }
 
