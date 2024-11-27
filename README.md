@@ -7,7 +7,7 @@ This GUI is designed to allow a user to interact with the business_supply databa
 
 ## Technologies Used
 
-- **Python**: Programming language used for the backend logic.
+- **Python3**: Programming language used for the backend logic.
 - **PyQt5**: GUI framework used for building the interface.
 - **pip**: Python package manager used for managing dependencies.
 
@@ -19,7 +19,7 @@ Ensure that Python 3 and pip are installed on your machine. You can check by run
 
 ```bash
 python3 --version
-pip3 --version
+pip --version
 ```
 
 If Python is not installed, download it from [python.org](https://www.python.org/downloads/).
@@ -71,7 +71,7 @@ pip install --force-reinstall -r requirements.txt
 Once the dependencies are installed, you can run the application with:
 
 ```bash
-python 5done.py
+python3 5done.py
 ```
 
 ### 5. Deactivate Virtual Environment (Optional)
