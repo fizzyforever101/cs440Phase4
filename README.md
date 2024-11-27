@@ -1,0 +1,83 @@
+
+# CS 4400 Phase 4
+
+## Overview
+
+This GUI is designed to allow a user to interact with the business_supply database. It uses PyQt5 for the graphical user interface (GUI) and Python for the backend logic.
+
+## Technologies Used
+
+- **Python**: Programming language used for the backend logic.
+- **PyQt5**: GUI framework used for building the interface.
+- **pip**: Python package manager used for managing dependencies.
+
+## Setup Instructions
+
+### Prerequisites
+
+Ensure that Python 3 and pip are installed on your machine. You can check by running the following commands:
+
+```bash
+python3 --version
+pip3 --version
+```
+
+If Python is not installed, download it from [python.org](https://www.python.org/downloads/).
+
+### 1. Clone the Repository
+
+Clone the repository to your local machine:
+
+```bash
+git clone <repository_url>
+cd <project_directory>
+```
+
+### 2. Create a Virtual Environment (Recommended)
+
+It’s recommended to use a virtual environment to avoid conflicts with system-wide packages:
+
+```bash
+python -m venv venv
+```
+
+Activate the virtual environment:
+
+- On Windows:
+  ```bash
+  venv\Scripts\activate
+  ```
+- On macOS/Linux:
+  ```bash
+  source venv/bin/activate
+  ```
+
+### 3. Install the Required Dependencies
+
+Install the required Python packages listed in `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
+
+If you want to force reinstall the dependencies (if already installed), run:
+
+```bash
+pip install --force-reinstall -r requirements.txt
+```
+
+### 4. Run the Application
+
+Once the dependencies are installed, you can run the application with:
+
+```bash
+python 5done.py
+```
+
+### 5. Deactivate Virtual Environment (Optional)
+
+When you're done, deactivate the virtual environment:
+
+```bash
+deactivate
+```
