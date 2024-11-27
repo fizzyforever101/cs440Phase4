@@ -24,6 +24,8 @@ pip --version
 
 If Python is not installed, download it from [python.org](https://www.python.org/downloads/).
 
+You should also already have SQL Workbench with the business_supply database available on your computer.
+
 ### 1. Clone the Repository
 
 Clone the repository to your local machine:
