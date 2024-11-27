@@ -72,6 +72,11 @@ def open_procedure_form(proc_name, fields):
             locations = get_locations()  # Fetch locations from the database
             entry.addItems(locations)
             layout.addRow(f"{field}:", entry)
+        elif field == "business_long_name":  # Use a QComboBox for location (assuming locations are predefined)
+            entry = QComboBox()
+            locations = get_business_long_names()  # Fetch locations from the database
+            entry.addItems(locations)
+            layout.addRow(f"{field}:", entry)
         elif field == "home_base":  # Use a QComboBox for location (assuming locations are predefined)
             entry = QComboBox()
             locations = get_locations()  # Fetch locations from the database
@@ -97,9 +102,34 @@ def open_procedure_form(proc_name, fields):
             usernames = get_usernames()  # Fetch usernames from the database
             entry.addItems(usernames)
             layout.addRow(f"{field}:", entry)
+        elif field == "employee_username":  # Use a QComboBox for username
+            entry = QComboBox()
+            usernames = get_employee_usernames()  # Fetch usernames from the database
+            entry.addItems(usernames)
+            layout.addRow(f"{field}:", entry)
         elif field == "van_id":  # Use a QComboBox for username
             entry = QComboBox()
             delivery_service_ids = get_delivery_service_ids()  # Fetch usernames from the database
+            entry.addItems(delivery_service_ids)
+            layout.addRow(f"{field}:", entry)
+        elif field == "van_tag":  # Use a QComboBox for username
+            entry = QComboBox()
+            delivery_service_ids = get_van_tags()  # Fetch usernames from the database
+            entry.addItems(delivery_service_ids)
+            layout.addRow(f"{field}:", entry)
+        elif field == "new_employee_id":  # Use a QComboBox for username
+            entry = QComboBox()
+            delivery_service_ids = get_delivery_service_ids()  # Fetch usernames from the database
+            entry.addItems(delivery_service_ids)
+            layout.addRow(f"{field}:", entry)
+        elif field == "employee_id":  # Use a QComboBox for username
+            entry = QComboBox()
+            delivery_service_ids = get_employee_ids()  # Fetch usernames from the database
+            entry.addItems(delivery_service_ids)
+            layout.addRow(f"{field}:", entry)
+        elif field == "van_barcode":  # Use a QComboBox for username
+            entry = QComboBox()
+            delivery_service_ids = get_barcodes()  # Fetch usernames from the database
             entry.addItems(delivery_service_ids)
             layout.addRow(f"{field}:", entry)
         elif field == "driver_experience":  # Use a QSpinBox for driver experience (integer field)
@@ -128,6 +158,10 @@ def open_procedure_form(proc_name, fields):
             entry.setValue(0)  # Set the initial value to 0
             layout.addRow(f"{field}:", entry)
         elif field == "x_coord":  # Use a QSpinBox for employee_experience
+            entry = QSpinBox()
+            entry.setRange(0, 1000)  # Assuming experience ranges from 0 to 100
+            entry.setValue(0)  # Set the initial value to 0
+        elif field == "quantity":  # Use a QSpinBox for employee_experience
             entry = QSpinBox()
             entry.setRange(0, 1000)  # Assuming experience ranges from 0 to 100
             entry.setValue(0)  # Set the initial value to 0
@@ -162,6 +196,11 @@ def open_procedure_form(proc_name, fields):
             entry.setRange(0, 100000)  # Assuming experience ranges from 0 to 100
             entry.setValue(0)  # Set the initial value to 0
             layout.addRow(f"{field}:", entry)
+        elif field == "more_fuel":  # Use a QSpinBox for employee_experience
+            entry = QSpinBox()
+            entry.setRange(0, 100000)  # Assuming experience ranges from 0 to 100
+            entry.setValue(0)  # Set the initial value to 0
+            layout.addRow(f"{field}:", entry)
         else:  # Use a QLineEdit for other fields
             entry = QtWidgets.QLineEdit()
             layout.addRow(f"{field}:", entry)
@@ -184,6 +223,21 @@ def get_locations():
         cursor = conn.cursor()
         cursor.execute("SELECT label FROM locations")  # Query to get locations
         locations = [row[0] for row in cursor.fetchall()]
+        return locations
+    except mysql.connector.Error as e:
+        QMessageBox.critical(None, "Database Error", f"Error fetching locations from database:\n{e}")
+        return []
+    finally:
+        conn.close()
+
+def get_van_tags():
+    conn = connect_to_db()
+    if conn is None:
+        return []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT distinct tag FROM vans")  # Query to get locations
+        locations = [str(row[0]) for row in cursor.fetchall()]
         return locations
     except mysql.connector.Error as e:
         QMessageBox.critical(None, "Database Error", f"Error fetching locations from database:\n{e}")
@@ -253,6 +307,66 @@ def get_usernames():
     finally:
         conn.close()
 
+def get_barcodes():
+    conn = connect_to_db()
+    if conn is None:
+        return []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT barcode FROM products")  # Query to get usernames
+        usernames = [row[0] for row in cursor.fetchall()]
+        return usernames
+    except mysql.connector.Error as e:
+        QMessageBox.critical(None, "Database Error", f"Error fetching usernames from database:\n{e}")
+        return []
+    finally:
+        conn.close()
+
+def get_employee_usernames():
+    conn = connect_to_db()
+    if conn is None:
+        return []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT username FROM work_for")  # Query to get usernames
+        usernames = [row[0] for row in cursor.fetchall()]
+        return usernames
+    except mysql.connector.Error as e:
+        QMessageBox.critical(None, "Database Error", f"Error fetching usernames from database:\n{e}")
+        return []
+    finally:
+        conn.close()
+
+def get_business_long_names():
+    conn = connect_to_db()
+    if conn is None:
+        return []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT long_name FROM businesses")  # Query to get usernames
+        usernames = [row[0] for row in cursor.fetchall()]
+        return usernames
+    except mysql.connector.Error as e:
+        QMessageBox.critical(None, "Database Error", f"Error fetching usernames from database:\n{e}")
+        return []
+    finally:
+        conn.close()
+
+def get_employee_ids():
+    conn = connect_to_db()
+    if conn is None:
+        return []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT distinct id FROM work_for")  # Query to get usernames
+        usernames = [row[0] for row in cursor.fetchall()]
+        return usernames
+    except mysql.connector.Error as e:
+        QMessageBox.critical(None, "Database Error", f"Error fetching usernames from database:\n{e}")
+        return []
+    finally:
+        conn.close()
+
 # Main GUI setup
 class MyApp(QtWidgets.QWidget):
     def __init__(self):
@@ -271,7 +385,13 @@ class MyApp(QtWidgets.QWidget):
             "add_service": ["id", "long_name", "home_base", "manager"],
             "add_van": ["van_id", "tag", "fuel", "capacity", "sales", "driven_by"],
             "add_worker_role": ["username"],
-            "drive_van": ["id", "tag", "destination"]
+            "drive_van": ["id", "tag", "destination"],
+            "fire_employee": ["employee_username", "employee_id"],
+            "hire_employee": ["username", "new_employee_id"],
+            "load_van": ["van_id", "tag", "van_barcode"],
+            "manage_service": ["employee_username", "employee_id"],
+            "purchase_product": ["business_long_name", "van_id", "van_tag", "van_barcode", "quantity"],
+            "refuel_van": ["van_id", "van_tag", "more_fuel"]
             # Add other procedures here if needed
         }
 
