@@ -237,6 +237,7 @@ def open_procedure_form(proc_name, fields):
             entry = QSpinBox()
             entry.setRange(0, 1000)  # Assuming experience ranges from 0 to 100
             entry.setValue(0)  # Set the initial value to 0
+            layout.addRow(f"{field}:", entry)
         elif field == "quantity":  # Use a QSpinBox for employee_experience
             entry = QSpinBox()
             entry.setRange(0, 1000)  # Assuming experience ranges from 0 to 100
@@ -248,6 +249,16 @@ def open_procedure_form(proc_name, fields):
             entry.setValue(0)  # Set the initial value to 0
             layout.addRow(f"{field}:", entry)
         elif field == "weight":  # Use a QSpinBox for employee_experience
+            entry = QSpinBox()
+            entry.setRange(0, 1000)  # Assuming experience ranges from 0 to 100
+            entry.setValue(0)  # Set the initial value to 0
+            layout.addRow(f"{field}:", entry)
+        elif field == "price":  # Use a QSpinBox for employee_experience
+            entry = QSpinBox()
+            entry.setRange(0, 1000)  # Assuming experience ranges from 0 to 100
+            entry.setValue(0)  # Set the initial value to 0
+            layout.addRow(f"{field}:", entry)
+        elif field == "more_packages":  # Use a QSpinBox for employee_experience
             entry = QSpinBox()
             entry.setRange(0, 1000)  # Assuming experience ranges from 0 to 100
             entry.setValue(0)  # Set the initial value to 0
@@ -489,7 +500,7 @@ class MyApp(QtWidgets.QWidget):
         self.stored_procedures = {
             "add_business": ["long_name", "rating", "spent", "location"],
             "add_driver_role": ["username", "licenseID", "license_type", "driver_experience"],
-            "add_employee": ["employee_username", "first_name", "last_name", "address", "birthdate", "taxID", "hired", "employee_experience", "salary"],
+            "add_employee": ["employee's_username", "first_name", "last_name", "address", "birthdate", "taxID", "hired", "employee_experience", "salary"],
             "add_location": ["label", "x_coord", "y_coord", "space"],
             "add_owner": ["owner_username", "first_name", "last_name", "address", "birthdate"],
             "add_product": ["barcode", "name", "weight"],
@@ -499,7 +510,7 @@ class MyApp(QtWidgets.QWidget):
             "drive_van": ["id", "tag", "destination"],
             "fire_employee": ["employee_username", "employee_id"],
             "hire_employee": ["username", "new_employee_id"],
-            "load_van": ["van_id", "tag", "product_barcode"],
+            "load_van": ["van_id", "tag", "product_barcode", "price", "more_packages"],
             "manage_service": ["employee_username", "employee_id"],
             "purchase_product": ["business_long_name", "van_id", "van_tag", "product_barcode", "quantity"],
             "refuel_van": ["van_id", "van_tag", "more_fuel"],
@@ -507,7 +518,7 @@ class MyApp(QtWidgets.QWidget):
             "remove_product": ["product_barcode"],
             "remove_van": ["van_id", "van_tag"],
             "start_funding": ["owner", "amount", "business_long_name", "fund_date"],
-            "takeover_van": ["manager", "van_id", "van_tag"]
+            "takeover_van": ["driver_username", "van_id", "van_tag"]
             # Add other procedures here if needed
         }
 
