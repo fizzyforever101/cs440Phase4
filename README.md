@@ -11,6 +11,11 @@ This GUI is designed to allow a user to interact with the business_supply databa
 - **PyQt5**: GUI framework used for building the interface.
 - **pip**: Python package manager used for managing dependencies.
 
+## Work Distribution
+
+- Sabina Sokol: GUI design and code
+- 
+
 ## Setup Instructions
 
 ### Prerequisites
