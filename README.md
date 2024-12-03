@@ -67,8 +67,11 @@ If you want to force reinstall the dependencies (if already installed), run:
 ```bash
 pip install --force-reinstall -r requirements.txt
 ```
+### 4. Load the SQL Script in the SQL Workbench
 
-### 4. Run the Application
+Go to File > Open SQL Script and select cs4400_phase3_stored_procedures_3.sql. Once loaded, click the lightning bolt in the top of the workbench to run the file.
+
+### 5. Run the Application
 
 Once the dependencies are installed, you can run the application with:
 
@@ -76,7 +79,7 @@ Once the dependencies are installed, you can run the application with:
 python3 5done.py
 ```
 
-### 5. Deactivate Virtual Environment (Optional)
+### 6. Deactivate Virtual Environment (Optional)
 
 When you're done, deactivate the virtual environment:
 
