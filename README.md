@@ -15,7 +15,7 @@ This GUI is designed to allow a user to interact with the business_supply databa
 
 - Sabina Sokol: GUI design and code
 - Aishi Tyagi: Phase 3 Debuggging
-
+- Viktoria Fahnemann: Phase 3 Debugging
 ## Setup Instructions
 
 ### Prerequisites
